@@ -1,6 +1,7 @@
 import os
 import re
 from docx import Document
+from parse_fields import parse_fields
 
 path = r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\"
 
@@ -118,8 +119,9 @@ def read_descriptions(folder_path):
                     for file in files:
                         if "стара анкета" in file.lower():
                             full_path = os.path.join(root, file)
-                            print(f"   🔍 Знайдено файл: {full_path}")
-                            continue
+                            #print(f"   🔍 Знайдено файл: {full_path}")
+                            print(parse_fields(full_path))
+                            break
 
 # Приклад виклику
 f1 = r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\ГОРШКОВ Роман Валерійович 2024.11.15\стара анкета СДД ГОРШКОВ Роман Валерійович.docx"
@@ -128,5 +130,4 @@ f3 = r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО роб�
 
 if __name__ == "__main__":
     #rez = parse_employee_form(r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\ГОРШКОВ Роман Валерійович 2024.11.15\стара анкета СДД ГОРШКОВ Роман Валерійович.docx")
-    rez = parse_employee_form_from_4col_table(f3); print(rez)
-    #read_descriptions(path.strip())
+    read_descriptions(path.strip())
