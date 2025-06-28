@@ -55,7 +55,7 @@ for index, row in df.iterrows():
 
     # Формуємо ім’я файлу
     pib_safe = str(row.get('ПІБ', 'невідомий')).replace(' ', '_')
-    filename = f"анкета_{pib_safe}.docx"
+    filename = f"сдд_{pib_safe}_сзч.docx"
     doc.save(os.path.join(output_dir, filename))
 
 print("✅ Генерація завершена!")
