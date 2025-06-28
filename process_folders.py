@@ -3,7 +3,7 @@ import re
 from docx import Document
 from parse_fields import parse_fields
 
-path = r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\"
+folder_path = r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\"
 
 def parse_employee_form_from_4col_table(file_path: str) -> dict:
     doc = Document(file_path)
@@ -73,7 +73,8 @@ def parse_employee_form_from_4col_table(file_path: str) -> dict:
 
     return data
 
-def read_descriptions(folder_path):
+def read_descriptions():
+    folders = []
     descript_path = os.path.join(folder_path, "descript.ion")
 
     if not os.path.isfile(descript_path):
@@ -111,17 +112,20 @@ def read_descriptions(folder_path):
             folder_path_full = os.path.join(folder_path, folder_name)
             exists = os.path.isdir(folder_path_full)
             status = "✅ Є" if exists else "❌ Немає"
-            print(f"{status} | 📌 {folder_name} → {description}")
+            # print(f"{status} | 📌 {folder_name} → {description}")
 
             if exists:
+                folders.append(folder_name)
                 # Пошук файлів у підпапках з назвою "стара анкета"
-                for root, dirs, files in os.walk(folder_path_full):
-                    for file in files:
-                        if "стара анкета" in file.lower():
-                            full_path = os.path.join(root, file)
-                            #print(f"   🔍 Знайдено файл: {full_path}")
-                            print(parse_fields(full_path))
-                            break
+                # for root, dirs, files in os.walk(folder_path_full):
+                #     for file in files:
+                #         if "стара анкета" in file.lower():
+                #             full_path = os.path.join(root, file)
+                #             print(f"   🔍 Знайдено файл: {full_path}")
+                #             #print(parse_fields(full_path))
+                #             break
+
+    return folders
 
 # Приклад виклику
 f1 = r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\ГОРШКОВ Роман Валерійович 2024.11.15\стара анкета СДД ГОРШКОВ Роман Валерійович.docx"
@@ -130,4 +134,4 @@ f3 = r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО роб�
 
 if __name__ == "__main__":
     #rez = parse_employee_form(r"G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\ГОРШКОВ Роман Валерійович 2024.11.15\стара анкета СДД ГОРШКОВ Роман Валерійович.docx")
-    read_descriptions(path.strip())
+    rez = read_descriptions(); print(rez)
