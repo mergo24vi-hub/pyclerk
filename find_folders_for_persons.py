@@ -1,7 +1,7 @@
 import pandas as pd
 from process_folders import read_descriptions
 # Заміни 'your_file.xlsx' на шлях до твого Excel-файлу
-file_path = 'personal/шаблон. сзч.xlsx'
+file_path = 'personal/шаблон.сзч.xlsx'
 
 # Зчитуємо Excel-файл
 df = pd.read_excel(file_path)#, nrows=15

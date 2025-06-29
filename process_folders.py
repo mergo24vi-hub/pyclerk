@@ -108,7 +108,7 @@ def read_descriptions():
                 continue  # рядок без опису — пропускаємо
 
         # Перевірка опису
-        if "стара анкета" in description.lower():
+        if True: #"стара анкета" in description.lower():
             folder_path_full = os.path.join(folder_path, folder_name)
             exists = os.path.isdir(folder_path_full)
             status = "✅ Є" if exists else "❌ Немає"
