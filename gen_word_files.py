@@ -1,6 +1,7 @@
 import pandas as pd
 from docx import Document
 import os
+from datetime import datetime
 
 # === Налаштування ===
 excel_file = 'personal/шаблон. сзч.xlsx'  # шлях до твого Excel-файлу
@@ -10,6 +11,14 @@ os.makedirs(output_dir, exist_ok=True)
 
 # === Зчитування Excel ===
 df = pd.read_excel(excel_file, nrows=3)
+df = df.fillna('')
+
+def format_cell(value):
+    if pd.isna(value):
+        return ''
+    elif isinstance(value, (datetime, pd.Timestamp)):
+        return value.strftime('%d.%m.%Y')  # або '%Y-%m-%d' для ISO-формату
+    return str(value)
 
 # === Обробка кожного рядка ===
 for index, row in df.iterrows():
@@ -21,7 +30,7 @@ for index, row in df.iterrows():
         '«Звання»': row.get('Звання', ''),
         '«ПІБ»': row.get('ПІБ', ''),
         '«Посада»': row.get('Посада', ''),
-        '«ДатаНар»': row.get('ДатаНар', ''),
+        '«ДатаНар»': format_cell(row.get('ДатаНар')),
         '«МісцеНар»': row.get('МісцеНар', ''),
         '«Призов»': row.get('Призов', ''),
         '«СімейнийСтан»': row.get('СімейнийСтан', ''),
