@@ -1,18 +1,19 @@
 import pandas as pd
 from docx import Document
+from docx.shared import Cm
 import os
 from pathlib import Path
 from datetime import datetime
 
 # === Налаштування ===
 excel_file = 'personal/шаблон.сзч.xlsx'  # шлях до твого Excel-файлу
-template_file = 'personal/formatted_template.docx'
+template_file = 'personal/imaged_template.docx'
 output_dir = 'generated'
-output_dir = r'G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\'
+#output_dir = r'G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ\.Не штатні\.СЗЧ\\'
 #os.makedirs(output_dir, exist_ok=True)
 
 # === Зчитування Excel ===
-df = pd.read_excel(excel_file)
+df = pd.read_excel(excel_file, nrows=1)
 df = df.fillna('')
 
 def format_cell(value):
@@ -21,6 +22,22 @@ def format_cell(value):
     elif isinstance(value, (datetime, pd.Timestamp)):
         return value.strftime('%d.%m.%Y')  # або '%Y-%m-%d' для ISO-формату
     return str(value)
+
+def replace_text(paragraphs, replacements):
+    for paragraph in paragraphs:
+        for key, val in replacements.items():
+            if key in paragraph.text:
+                for run in paragraph.runs:
+                    run.text = run.text.replace(key, str(val))
+
+def insert_image_in_place_of_marker(doc, marker, image_path, width_cm=5, height_cm=5):
+    for paragraph in doc.paragraphs:
+        if marker in paragraph.text:
+            paragraph.clear()
+            run = paragraph.add_run()
+            run.add_picture(image_path, width=Cm(width_cm), height=Cm(height_cm))
+            return True
+    return False
 
 # === Обробка кожного рядка ===
 for index, row in df.iterrows():
@@ -47,14 +64,10 @@ for index, row in df.iterrows():
         '«ГрупаКрові»': row.get('ГрупаКрові', '')
     }
 
-    # Заміна в тексті документа
-    for paragraph in doc.paragraphs:
-        for key, val in replacements.items():
-            if key in paragraph.text:
-                for run in paragraph.runs:
-                    run.text = run.text.replace(key, str(val))
+    replace_text(doc.paragraphs, replacements)
 
     # Заміна в таблицях (якщо є)
+
     for table in doc.tables:
         for row_table in table.rows:
             for cell in row_table.cells:
@@ -63,6 +76,16 @@ for index, row in df.iterrows():
                         if key in paragraph.text:
                             for run in paragraph.runs:
                                 run.text = run.text.replace(key, str(val))
+
+        # Вставка зображення
+
+    image_path = 'personal//'+ row.get('Фото', '').strip()
+    print(image_path)
+    if image_path and os.path.isfile(image_path):
+        print('photo exists')
+        inserted = insert_image_in_place_of_marker(doc, 'ФОТО', image_path)
+        if not inserted:
+            print(f"⚠️ Не знайдено маркер 'ФОТО' у шаблоні для: {row.get('ПІБ')}")
 
     # Формуємо ім’я файлу
     pib_safe = str(row.get('ПІБ', 'невідомий')).replace(' ', '_')
