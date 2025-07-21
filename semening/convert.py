@@ -16,21 +16,8 @@ def convert_doc_to_txt(input_path, output_dir=None):
     else:
         print("Converted:", os.path.join(output_dir, os.path.splitext(os.path.basename(input_path))[0] + ".txt"))
 
-    with open("test.txt", "r", encoding="utf-8") as f:
+    with open("test.txt", "r", encoding="windows-1251") as f:
         text = f.read()
+        print(text)
 
 convert_doc_to_txt(r'D:\apps\pyclerk\semening\test.docx')
-
-# import pypandoc
-# import win32com.client
-# # With an input file: it will infer the input format from the filename
-# # output = pypandoc.convert_file(r'D:\apps\pyclerk\semening\test.docx', 'plain')
-# # print(output)
-#
-#
-#
-# word = win32com.client.Dispatch("Word.Application")
-# doc = word.Documents.Open(r'D:\apps\pyclerk\semening\test.doc')
-# doc.SaveAs(r'D:\apps\pyclerk\semening\\', FileFormat=2)  # 2 = wdFormatText
-# doc.Close()
-# word.Quit()
