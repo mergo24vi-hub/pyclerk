@@ -1,6 +1,8 @@
 #G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\ОСОБИСТІ ПАПКИ
 import os
 from docx import Document
+import re
+from doc2docx import convert_doc_to_docx
 root_dir = r'G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\\РОБОЧА ГОДЗЕВИЧ\семенезація\\'
 
 
@@ -30,6 +32,34 @@ def process_document(file_path):
 
     # doc.save(file_path)  # Зберігання зміненого документа (за потреби)
 
+def extract_all_text(doc_path):
+    doc = Document(doc_path)
+    full_text = []
+
+    # абзаци документа
+    for para in doc.paragraphs:
+        full_text.append(para.text)
+
+    # текст із таблиць
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                full_text.append(cell.text)
+
+    # об’єднуємо в один рядок для пошуку
+    return "\n".join(full_text)
+
+def check_signature_pattern(text):
+    # Регулярний вираз:
+    # .*? — лінйний пошук між частинами
+    pattern = re.compile(
+        r"Командир\s+військової\s+частини\s+А4007.*?"
+        r"полковник.*?"
+        r"Валерій\s+СЕМЕНЕЦЬ",
+        re.DOTALL | re.IGNORECASE
+    )
+    return bool(pattern.search(text))
+
 i=0
 for folder in os.listdir(root_dir):
     folder_path = os.path.join(root_dir, folder)
@@ -43,15 +73,20 @@ for folder in os.listdir(root_dir):
             continue
         #print(file_path)
         # Перевіряємо, що це файл .doc з 'сдд' у назві (незалежно від регістру)
-        if not file.startswith('~') and (file.lower().endswith('.docx') or file.lower().endswith('.docx')):
-            print(file_path)
-            process_document(file_path)
+        if not file.startswith('~') and (file.lower().endswith('.docx')):
+
+            text = extract_all_text(file_path)
+            if not check_signature_pattern(text):
+                print(file_path)
+                print("Збіг НЕ знайдено ❌")
+
+
 
 
 
 
 
     i=i+1
-    if i>2:
+    if i>500:
        break
     print('--------')
