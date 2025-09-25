@@ -3,7 +3,7 @@ import os
 from docx import Document
 import re
 from doc2docx import convert_doc_to_docx
-root_dir = r'G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\\РОБОЧА ГОДЗЕВИЧ\семенезація\\'
+root_dir = r'G:\.shortcut-targets-by-id\1Pcnp8gnqT8NS3Zl5AOanpcBmZLHuuv5I\РО робоча\\РОБОЧА ГОДЗЕВИЧ\Списання ЗЧ\\'
 
 
 def process_document(file_path):
@@ -79,9 +79,6 @@ for folder in os.listdir(root_dir):
             if not check_signature_pattern(text):
                 print(file_path)
                 print("Збіг НЕ знайдено ❌")
-
-
-
 
 
 
