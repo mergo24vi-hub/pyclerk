@@ -2,11 +2,11 @@ from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
 
 
-def render2doc(context):
+def render2doc(prefix, context):
     doc = DocxTemplate("docxtpl.docx")
-    context['photo'] = InlineImage(doc, 'uaavas/' + context['file'] + ".jpg", width=Mm(50))
+    context['photo'] = InlineImage(doc,prefix+ "avas/" + context['file'] + ".jpg", width=Mm(50))
     doc.render(context)
-    doc.save(context['file']+".docx")
+    doc.save(prefix +"tmp/"+context['file']+".docx")
 
 
 if __name__=='__main__':
@@ -16,4 +16,3 @@ if __name__=='__main__':
         "убд": "Так",
         "file": "бабенко"
     }
-    render2doc(context)
